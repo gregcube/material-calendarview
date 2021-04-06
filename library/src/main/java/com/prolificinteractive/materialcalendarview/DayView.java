@@ -12,6 +12,7 @@ import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.graphics.drawable.shapes.RectShape;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatCheckedTextView;
@@ -19,8 +20,10 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.view.Gravity;
 import android.view.View;
+
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView.ShowOtherDates;
 import com.prolificinteractive.materialcalendarview.format.DayFormatter;
+
 import java.util.List;
 
 import static com.prolificinteractive.materialcalendarview.MaterialCalendarView.showDecoratedDisabled;
@@ -54,6 +57,13 @@ import static com.prolificinteractive.materialcalendarview.MaterialCalendarView.
     fadeTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
     setSelectionColor(this.selectionColor);
+    setGravity(Gravity.TOP);
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+      setTextAlignment(TEXT_ALIGNMENT_TEXT_END);
+      setPadding(0,10,20,0);
+    }
+
     setDay(day);
   }
 
@@ -206,23 +216,29 @@ import static com.prolificinteractive.materialcalendarview.MaterialCalendarView.
   private static Drawable generateBackground(int color, int fadeTime, Rect bounds) {
     StateListDrawable drawable = new StateListDrawable();
     drawable.setExitFadeDuration(fadeTime);
-    drawable.addState(new int[] { android.R.attr.state_checked }, generateCircleDrawable(color));
+    drawable.addState(new int[] { android.R.attr.state_checked }, generateRectDrawable(color));
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       drawable.addState(
           new int[] { android.R.attr.state_pressed },
           generateRippleDrawable(color, bounds)
       );
     } else {
-      drawable.addState(new int[] { android.R.attr.state_pressed }, generateCircleDrawable(color));
+      drawable.addState(new int[] { android.R.attr.state_pressed }, generateRectDrawable(color));
     }
 
-    drawable.addState(new int[] { }, generateCircleDrawable(Color.TRANSPARENT));
+    drawable.addState(new int[] { }, generateRectDrawable(Color.TRANSPARENT));
 
     return drawable;
   }
 
   private static Drawable generateCircleDrawable(final int color) {
     ShapeDrawable drawable = new ShapeDrawable(new OvalShape());
+    drawable.getPaint().setColor(color);
+    return drawable;
+  }
+
+  private static Drawable generateRectDrawable(final int color) {
+    ShapeDrawable drawable = new ShapeDrawable(new RectShape());
     drawable.getPaint().setColor(color);
     return drawable;
   }
