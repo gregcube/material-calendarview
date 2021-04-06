@@ -54,13 +54,6 @@ import static com.prolificinteractive.materialcalendarview.MaterialCalendarView.
     fadeTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
     setSelectionColor(this.selectionColor);
-
-    setGravity(Gravity.CENTER);
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-      setTextAlignment(TEXT_ALIGNMENT_CENTER);
-    }
-
     setDay(day);
   }
 
